@@ -1,5 +1,9 @@
 import PySimpleGUI as sg
 import todolist as td
+import time
+
+sg.theme('Dark Amber 5')
+clock = sg.Text('', key='clock')
 label = sg.Text("Type in a to-do")
 input_box = sg.InputText(tooltip="Enter todo", key = "todo")
 add_button = sg.Button("Add")
@@ -9,15 +13,16 @@ edit_button = sg.Button("Edit")
 exit_button = sg.Button("Exit")
 complete_button = sg.Button("Complete")
 window = sg.Window('My to-do app',
-                    layout=[[label], [input_box, add_button],[list_box, edit_button, complete_button],[exit_button]],
+                    layout=[[clock],[label], [input_box, add_button],[list_box, edit_button, complete_button],[exit_button]],
                     font=('Helvetica',10))
 
 #close the window
 while True:
-    event, values = window.read()
-    print(event)
-    print(values)
-    print((values['todos']))
+    event, values = window.read(timeout=10)
+    window["clock"].update(value=time.strftime("%b %d, %Y %H:%M:%S"))
+    # print(event)
+    # print(values)
+    # print((values['todos']))
     match event:
         case "Add":
             todos = td.get_todos()
@@ -41,12 +46,15 @@ while True:
             except IndexError:
                 sg.popup("Please select an item first")
         case "Complete":
-            todo_to_complete = values['todos'][0]
-            todos = td.get_todos()
-            todos.remove(todo_to_complete)
-            td.write_todos(todos)
-            window['todos'].update(values=todos)
-            window['todo'].update(value="")
+            try:
+                todo_to_complete = values['todos'][0]
+                todos = td.get_todos()
+                todos.remove(todo_to_complete)
+                td.write_todos(todos)
+                window['todos'].update(values=todos)
+                window['todo'].update(value="")
+            except IndexError:
+                sg.popup("Please select an item first")
         case "Exit":
             break
         case 'todos':
