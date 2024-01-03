@@ -1,6 +1,5 @@
-cook
 clean
-code
+throw
+study
 learn
-cook
-haitd
+clean the bag
