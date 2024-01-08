@@ -2,4 +2,4 @@ clean
 throw
 study
 learn
-clean the bag
+go home
